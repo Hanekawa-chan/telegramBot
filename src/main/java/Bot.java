@@ -1,36 +1,29 @@
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @NoArgsConstructor
+@Getter
+@Setter
 public class Bot extends TelegramLongPollingBot {
 
-    /**
-     * Метод для приема сообщений.
-     * @param update Содержит сообщение от пользователя.
-     */
     @Override
     public void onUpdateReceived(Update update) {
-        try {
-            //проверяем есть ли сообщение и текстовое ли оно
-            if (update.hasMessage() && update.getMessage().hasText()) {
-                //Извлекаем объект входящего сообщения
-                Message inMessage = update.getMessage();
-                //Создаем исходящее сообщение
-                SendMessage outMessage = new SendMessage();
-                //Указываем в какой чат будем отправлять сообщение
-                //(в тот же чат, откуда пришло входящее сообщение)
-                outMessage.setChatId(String.valueOf(inMessage.getChatId()));
-                //Указываем текст сообщения
-                outMessage.setText(inMessage.getText());
-                //Отправляем сообщение
-                execute(outMessage);
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            if(update.getMessage().equals("/hi")) {
+                SendMessage message = new SendMessage();
+                message.setChatId(String.valueOf(update.getMessage().getChatId()));
+                message.setText("Привет, " + update.getMessage().getFrom().getUserName());
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
         }
     }
 
@@ -51,4 +44,6 @@ public class Bot extends TelegramLongPollingBot {
     public String getBotToken() {
         return "1727229817:AAHTHiuW4qu7SFgZw59M7ZATkQ6FXTVrIqQ";
     }
+
+
 }

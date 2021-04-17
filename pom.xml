@@ -24,6 +24,11 @@
             <artifactId>telegrambots</artifactId>
             <version>${telegram.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.telegram</groupId>-->
+<!--            <artifactId>telegrambotsextensions</artifactId>-->
+<!--            <version>${telegram.version}</version>-->
+<!--        </dependency>-->
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
