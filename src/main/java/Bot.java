@@ -1,27 +1,45 @@
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class Bot extends TelegramLongPollingBot {
 
+    private boolean isOn = false;
+    private boolean isAuthed = false;
+
+    @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             if(update.getMessage().getText().equals("/hi")) {
                 SendMessage message = new SendMessage();
                 message.setChatId(String.valueOf(update.getMessage().getChatId()));
-                message.setText("Привет, " + update.getMessage().getFrom().getUserName());
-                try {
+                message.setText("Привет, " + update.getMessage().getFrom().getUserName() + "\n" +
+                         "Пожалуйста, введите пароль");
+                execute(message);
+                isOn = true;
+            }
+            if(isOn) {
+                if(update.getMessage().getText().equals("password")) {
+                    SendMessage message = new SendMessage();
+                    message.setChatId(String.valueOf(update.getMessage().getChatId()));
+                    message.setText("Правильный пароль :)");
                     execute(message);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
+                    isAuthed = true;
+                }
+                else {
+                    SendMessage message = new SendMessage();
+                    message.setChatId(String.valueOf(update.getMessage().getChatId()));
+                    message.setText("Неправильный пароль :(");
+                    execute(message);
+                    isOn = false;
                 }
             }
         }
