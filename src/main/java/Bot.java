@@ -18,21 +18,14 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            if(update.getMessage().getText().equals("/hi")) {
-                SendMessage message = new SendMessage();
-                message.setChatId(String.valueOf(update.getMessage().getChatId()));
-                message.setText("Привет, " + update.getMessage().getFrom().getUserName() + "\n" +
-                         "Пожалуйста, введите пароль");
-                execute(message);
-                isOn = true;
-            }
-            if(isOn) {
+            if (isOn) {
                 if(update.getMessage().getText().equals("password")) {
                     SendMessage message = new SendMessage();
                     message.setChatId(String.valueOf(update.getMessage().getChatId()));
                     message.setText("Правильный пароль :)");
                     execute(message);
                     isAuthed = true;
+                    isOn = false;
                 }
                 else {
                     SendMessage message = new SendMessage();
@@ -41,6 +34,14 @@ public class Bot extends TelegramLongPollingBot {
                     execute(message);
                     isOn = false;
                 }
+            }
+            if (update.getMessage().getText().equals("/hi")) {
+                SendMessage message = new SendMessage();
+                message.setChatId(String.valueOf(update.getMessage().getChatId()));
+                message.setText("Привет, " + update.getMessage().getFrom().getUserName() + "\n" +
+                         "Пожалуйста, введите пароль");
+                execute(message);
+                isOn = true;
             }
         }
     }
