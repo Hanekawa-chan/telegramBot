@@ -44,7 +44,7 @@ public class Bot extends TelegramLongPollingBot {
                 while(true) {
                     Date date = new Date();
                     System.out.println(date + " Время=" + date.toString().subSequence(11,18));
-                    if(date.toString().subSequence(11,18).equals("20:00:00")) {
+                    if(date.toString().subSequence(11,19).equals("20:00:00")) {
                         send(id, "Время настало!");
                     }
                 }
